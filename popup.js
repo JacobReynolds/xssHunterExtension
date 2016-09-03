@@ -1,7 +1,6 @@
 chrome.storage.sync.get('xssHunterSubdomain', function (answer) {
 	subdomain = answer.xssHunterSubdomain;
 	if (subdomain !== null) {
-		debugger;
 		$('#subdomain').val(subdomain);
 		setPayloads(subdomain);
 	}
