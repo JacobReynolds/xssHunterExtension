@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>XSS Hunter</title>
+	<style>
+		body {
+			width: 800px;
+			padding: 20px;
+			overflow-x: hidden;
+			font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif!important;
+		}
+		
+		.payloadCopy {
+			margin-bottom: 20px !important;
+		}
+		
+		#copyTextArea {
+			height: 0px;
+			width: 0px;
+		}
+		
+		#subdomain {
+			margin-bottom: 20px !important;
+			max-width: 700px;
+			margin: auto;
+		}
+		
+		#payloads {
+			max-width: 700px;
+			margin: auto;
+		}
+		
+		.payloadCopy {
+			background-color: #37bc9b !important;
+		}
+
+	</style>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+	<input id="subdomain" class="form-control" name="subdomain" placeholder="Please Enter XSSHunter Subdomain">
+	<div id="payloads"></div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="popup.js"></script>
+
+</html>
